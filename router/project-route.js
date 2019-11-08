@@ -55,6 +55,15 @@ router.get("/resources", (req, res) => {
         })
 })
 
+router.get("/resources/:id", (req, res) => {
+    db.findResourcesById(req.params.id)
+        .then(resources => {
+            res.status(200).json(resources)
+        })
+        .catch(error => {
+            res.status(500).json({ message: "The resources you are looking for cannot be retrieved at this time:-" + error.message})
+        })
+})
 
 
 //   *************** Post Requests *******/
