@@ -45,35 +45,61 @@ router.get("/taskOnProject/:id", (req, res) => {
         })
 })
 
+router.get("/resources", (req, res) => {
+    db.findResources()
+        .then(resources => {
+            res.status(200).json(resources)
+        })
+        .catch(error => {
+            res.status(500).json({ message: "The resources you are looking for cannot be retrieved at this time:-" + error.message})
+        })
+})
+
 
 
 //   *************** Post Requests *******/
 
 router.post("/projects", (req, res) => {
-    db.addProject(req.body)
-        .then(projects => {
-            if(projects){
-                res.status(200).json({message: `New project with ID ${projects} got created`})
-            }else{
-                res.status(400).json({message: "Pleaseprovide need columns forthe post"})
-            }
-        })
-        .catch(error => {
-            res.status(500).json({ message: "We cannot add this task at this time. " + error.message})
-        })
+    if(!req.body.name){
+        res.status(400).json({message: "Please provide needed column for the post 'name' "})
+    }else{
+        db.addProject(req.body)
+            .then(projects => {
+                    res.status(200).json({message: `New project with ID ${projects} got created`})
+            })
+            .catch(error => {
+                res.status(500).json({ message: "something went wrong:-. " + error.message})
+            })
+    }
+
 })
 
 router.post("/tasks", (req, res) => {
-    db.addTask(req.body)
-        .then(project => {
-            if(project){
-                res.status(200).json({message: `New task with ID ${project} got created`})
-            }else{
-                res.status(400).json({message: "Pleaseprovide need columns forthe post"})
-            }        })
-        .catch(error => {
-            res.status(500).json({ message: "We cannot add this task at this time. " + error.message})
-        })
+    if(!req.body.description && !req.body.project_id){
+        res.status(400).json({message: "Please provide needed column for the post namely 'description' and 'project_id' "})
+    }else{
+        db.addTask(req.body)
+            .then(tasks => {
+                    res.status(200).json({message: `New project with ID ${tasks} got created`})
+            })
+            .catch(error => {
+                res.status(500).json({ message: "something went wrong:-. " + error.message})
+            })
+    }
+})
+
+router.post("/resources", (req, res) => {
+    if(!req.body.name){
+        res.status(400).json({message: "Please provide needed column for the post 'name' "})
+    }else{
+        db.addResource(req.body)
+            .then(resource => {
+                    res.status(200).json({message: `New project with ID ${resource} got created`})
+            })
+            .catch(error => {
+                res.status(500).json({ message: "something went wrong:-. " + error.message})
+            })
+    }
 })
 
 
