@@ -5,12 +5,19 @@ const mappers = require('./mapper');
 module.exports = {
     addTask, 
     getProjectTasks,
-    getTasks
+    getTasks,
+    getTasksById,
+    updateTask,
+    removeTask
 } 
 
 function getTasks () {
     return db("task")
     .then(tasks => tasks.map(task => mappers.actionToBody(task)));
+}
+
+function getTasksById (id) {
+    return db("task").where({id}).first();
 }
 
 function getProjectTasks (id) {
@@ -25,3 +32,15 @@ function getProjectTasks (id) {
 function addTask (task) {
     return db("task").insert(task)
 }
+
+function updateTask(changed, id) {
+    return db('task')
+      .where({ id })
+      .update(changed);
+  }
+  
+  function removeTask(id) {
+    return db('task')
+        .where({id})
+        .del();
+  }

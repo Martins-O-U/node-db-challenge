@@ -13,6 +13,16 @@ router.get("/tasks", (req, res) => {
         })
 })
 
+router.get("/tasks/:id", (req, res) => {
+    db.getTasksById(req.params.id)
+        .then(task => {
+            res.status(200).json(task)
+        })
+        .catch(error => {
+            res.status(500).json({ message: "The resources you are looking for cannot be retrieved at this time:-" + error.message})
+        })
+})
+
 router.get("/taskOnProject/:id", (req, res) => {
     db.getProjectTasks(req.params.id)
         .then(tasks => {
@@ -36,5 +46,41 @@ router.post("/tasks", (req, res) => {
             })
     }
 })
+
+router.put("/tasks/:id", (req, res) => {
+    db.getTasksById(req.params.id)
+    .then(found =>{
+        if(found){
+            db.updateTask(req.body, req.params.id)
+                .then(project => {
+                    res.status(200).json({message: `${project} Project with ID ${req.params.id} got Edited`})
+                })
+        }else{
+            res.status(404).json({ message: 'Could not find project with given id' });
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ message: "something went wrong:-. " + error.message})
+    })
+
+})
+
+//   *************** Delete Requests *******/
+router.delete('/projects/:id', (req, res) => {
+  
+    db.removeTask(req.params.id)
+    .then(deleted => {
+      if (deleted) {
+        res.json({ Message: `A project with ID ${req.params.id} got deleted` });
+      } else {
+        res.status(404).json({ message: 'Could not find a project with given id' });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ message: 'Failed to delete project ' + error.message});
+    });
+  });
+
+
 
 module.exports = router; 

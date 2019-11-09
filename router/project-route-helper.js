@@ -6,9 +6,11 @@ const task = require('./task-route-helper')
 
 module.exports = {
     // getAllProjects,
-    // getProjectById,
+    getProjectById,
     getpreojects,
     addProject,
+    updateProject,
+    removeProject
 } 
 
 function getpreojects(id) {
@@ -38,16 +40,27 @@ function getpreojects(id) {
     });
 }
 
-// function getProjectById (id) {
-//     return db("projects").where({id}).first()
-// }
+function getProjectById (id) {
+    return db("projects").where({id}).first()
+}
 
 // function getAllProjects () {
 //     return db("projects");
 // }
 
-
-
 function addProject (project) {
     return db("projects").insert(project)
 }
+
+function updateProject(changed, id) {
+  return db('projects')
+    .where({ id })
+    .update(changed);
+}
+
+function removeProject(id) {
+  return db('projects')
+      .where({id})
+      .del();
+}
+

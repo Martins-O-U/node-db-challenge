@@ -26,7 +26,7 @@ router.get("/projects/:id", (req, res) => {
 })
 
 
-//   *************** Post Requests *******/
+//   *************** Post Request *******/
 
 router.post("/projects", (req, res) => {
     if(!req.body.name){
@@ -42,6 +42,42 @@ router.post("/projects", (req, res) => {
     }
 
 })
+
+//   *************** Put Request *******/
+
+router.put("/projects/:id", (req, res) => {
+    db.getProjectById(req.params.id)
+    .then(found =>{
+        if(found){
+            db.updateProject(req.body, req.params.id)
+                .then(project => {
+                    res.status(200).json({message: `${project} Project with ID ${req.params.id} got Edited`})
+                })
+        }else{
+            res.status(404).json({ message: 'Could not find project with given id' });
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ message: "something went wrong:-. " + error.message})
+    })
+
+})
+
+//   *************** Delete Requests *******/
+router.delete('/projects/:id', (req, res) => {
+  
+    db.removeProject(req.params.id)
+    .then(deleted => {
+      if (deleted) {
+        res.json({ Message: `A project with ID ${req.params.id} got deleted` });
+      } else {
+        res.status(404).json({ message: 'Could not find a project with given id' });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ message: 'Failed to delete project ' + error.message});
+    });
+  });
 
 
 //************* Default Landing Zone */

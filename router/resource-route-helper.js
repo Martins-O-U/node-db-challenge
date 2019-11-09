@@ -4,7 +4,9 @@ module.exports = {
     findResources,
     findLinkedResource,
     addResource,
-    findResourcesById
+    findResourcesById,
+    updateResource,
+    removeRosource
 }
 
 function findResources () {
@@ -26,3 +28,15 @@ function findLinkedResource (id) {
 function addResource (resource ) {
     return db("resource").insert(resource)
 }
+
+function updateResource(changed, id) {
+    return db('resource')
+      .where({ id })
+      .update(changed);
+  }
+  
+  function removeRosource(id) {
+    return db('resource')
+        .where({id})
+        .del();
+  }
